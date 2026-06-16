@@ -1,0 +1,108 @@
+[profile]
+name = "My Research Digest"
+keywords = [
+  "large language models",
+  "multi-agent systems",
+  "AI agents"
+]
+exclude_keywords = [
+  "job opening",
+  "advertisement"
+]
+
+[run]
+lookback_days = 7
+max_total_items = 40
+state_path = ".research_digest_state.sqlite"
+user_agent = "research-digest/0.1 (+local)"
+
+[sources.arxiv]
+enabled = true
+categories = ["cs.AI", "cs.CL", "cs.LG", "cs.MA"]
+max_results = 8
+
+[sources.crossref]
+enabled = true
+max_results = 8
+
+[sources.semantic_scholar]
+enabled = false
+max_results = 8
+api_key_env = "SEMANTIC_SCHOLAR_API_KEY"
+
+[sources.pubmed]
+enabled = false
+max_results = 8
+
+[sources.google_news]
+enabled = true
+language = "en-US"
+country = "US"
+max_results = 8
+
+[sources.conference_alerts]
+enabled = true
+when_days = 365
+mode = ""
+country_id = ""
+max_results = 8
+
+[sources.wikicfp]
+enabled = false
+max_results = 8
+
+[sources.watched_pages]
+enabled = false
+max_results = 8
+
+[[sources.watched_pages.pages]]
+title = "Important conference or program page"
+url = "https://example.org/conference"
+kind = "conference"
+source = "Watched Page"
+venue = ""
+date = "2026-09-14"
+summary = "Optional note about why this page matters."
+
+[sources.rss]
+enabled = false
+
+[[sources.rss.feeds]]
+name = "Hugging Face Daily Papers"
+url = "https://jamesg.blog/hf-papers.xml"
+kind = "paper"
+max_results = 8
+
+[summarization]
+mode = "local"
+language = "English"
+max_highlights = 8
+
+[summarization.openai]
+api_key_env = "OPENAI_API_KEY"
+base_url = "https://api.openai.com/v1/chat/completions"
+model = "gpt-4.1-mini"
+timeout_seconds = 60
+max_completion_tokens = 1400
+disable_thinking = false
+
+[delivery.file]
+enabled = true
+path = "output/latest_digest.md"
+chinese_enabled = true
+chinese_path = "output/latest_digest.zh.md"
+
+[delivery.email]
+enabled = false
+smtp_host_env = "SMTP_HOST"
+smtp_port_env = "SMTP_PORT"
+username_env = "SMTP_USERNAME"
+password_env = "SMTP_PASSWORD"
+from_env = "SMTP_FROM"
+to_env = "SMTP_TO"
+chinese_enabled = false
+use_starttls = true
+
+[delivery.webhook]
+enabled = false
+url_env = "DIGEST_WEBHOOK_URL"

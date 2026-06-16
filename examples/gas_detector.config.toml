@@ -1,0 +1,186 @@
+[profile]
+name = "Gas Detector Research Digest"
+keywords = [
+  "gas detector",
+  "gas photodetector",
+  "RPC",
+  "Resistive Plate Chamber",
+  "Low pressure gas detector",
+  "MPGD",
+  "Micromegas",
+  "Gaseous detector",
+  "Gaseous photodetector"
+]
+exclude_keywords = [
+  "job opening",
+  "advertisement",
+  "remote procedure call",
+  "RPC endpoint",
+  "RPC protocol",
+  "blockchain",
+  "cryptocurrency",
+  "market analysis",
+  "market growth",
+  "CAGR",
+  "portable gas detection",
+  "global growth insights",
+  "industrial safety",
+  "robotic gas detection",
+  "robot dog",
+  "Boston Dynamics",
+  "Dronelife",
+  "Blackline Safety",
+  "LNG safety",
+  "odor of gas",
+  "oil patch",
+  "petroleum",
+  "greenhouse gas",
+  "thin film evaporation",
+  "molecular dynamics",
+  "nanostructured surfaces",
+  "R-parity",
+  "supersymmetry"
+]
+
+[run]
+lookback_days = 30
+max_total_items = 100
+state_path = ".research_digest_state.sqlite"
+user_agent = "research-digest/0.1 (+local)"
+
+[sources.arxiv]
+enabled = true
+categories = ["physics.ins-det", "hep-ex", "nucl-ex", "physics.acc-ph"]
+max_results = 50
+
+[sources.crossref]
+enabled = true
+max_results = 30
+
+[sources.semantic_scholar]
+enabled = false
+max_results = 8
+api_key_env = "SEMANTIC_SCHOLAR_API_KEY"
+
+[sources.pubmed]
+enabled = false
+max_results = 8
+
+[sources.google_news]
+enabled = true
+language = "en-US"
+country = "US"
+max_results = 8
+
+[sources.conference_alerts]
+enabled = true
+when_days = 365
+mode = ""
+country_id = ""
+max_results = 8
+
+[sources.wikicfp]
+enabled = true
+max_results = 8
+
+[sources.watched_pages]
+enabled = true
+max_results = 8
+
+[[sources.watched_pages.pages]]
+title = "RPC 2026 - XVIII Conference on Resistive Plate Chambers and Related Detectors"
+url = "https://indico.global/event/15349/"
+kind = "conference"
+source = "RPC 2026 Indico"
+venue = "Rio de Janeiro, Brazil"
+date = "2026-09-14"
+summary = "RPC 2026 will take place in Rio de Janeiro, Brazil, September 14-18, 2026. Official website: https://rpc2026.uerj.br/. Indico pages include detailed program, timetable, scientific program, registration, and abstract information."
+
+[[sources.watched_pages.pages]]
+title = "RPC 2026 Program in Detail"
+url = "https://indico.global/event/15349/timetable/"
+kind = "conference"
+source = "RPC 2026 Indico"
+venue = "Rio de Janeiro, Brazil"
+date = "2026-09-14"
+summary = "Detailed timetable for RPC 2026 on Indico."
+
+[[sources.watched_pages.pages]]
+title = "RPC 2026 Scientific Program"
+url = "https://indico.global/event/15349/program"
+kind = "conference"
+source = "RPC 2026 Indico"
+venue = "Rio de Janeiro, Brazil"
+date = "2026-09-14"
+summary = "Scientific program page for RPC 2026 on Indico."
+
+[[sources.watched_pages.pages]]
+title = "MPGD2026 - 9th International Conference on Micro-Pattern Gaseous Detectors"
+url = "https://indico.cern.ch/e/mpgd2026"
+kind = "conference"
+source = "MPGD2026 Indico"
+venue = "Masarykova Kolej Congress Centre, Czech Technical University in Prague"
+date = "2026-08-31"
+summary = "MPGD2026 will take place in Prague, Czech Republic, August 31-September 4, 2026. Topics include simulation and software, detector physics, MPGD technologies, applications, electronics, and production techniques."
+
+[[sources.watched_pages.pages]]
+title = "MPGD2026 Timetable"
+url = "https://indico.cern.ch/event/1473492/timetable/"
+kind = "conference"
+source = "MPGD2026 Indico"
+venue = "Masarykova Kolej Congress Centre, Czech Technical University in Prague"
+date = "2026-08-31"
+summary = "Detailed timetable page for MPGD2026 on CERN Indico."
+
+[[sources.watched_pages.pages]]
+title = "MPGD2026 Scientific Program"
+url = "https://indico.cern.ch/event/1473492/program"
+kind = "conference"
+source = "MPGD2026 Indico"
+venue = "Masarykova Kolej Congress Centre, Czech Technical University in Prague"
+date = "2026-08-31"
+summary = "Scientific program page for MPGD2026 on CERN Indico."
+
+[sources.rss]
+enabled = false
+
+[[sources.rss.feeds]]
+name = "Example Feed"
+url = "https://example.com/rss"
+kind = "paper"
+max_results = 8
+
+[summarization]
+mode = "openai"
+language = "English"
+max_highlights = 15
+
+[summarization.openai]
+api_key_env = "MIMO_API_KEY"
+base_url = "https://token-plan-cn.xiaomimimo.com/v1/chat/completions"
+model = "mimo-v2.5-pro"
+timeout_seconds = 120
+max_completion_tokens = 3000
+disable_thinking = true
+
+[delivery.file]
+enabled = true
+path = "output/latest_digest.md"
+chinese_enabled = true
+chinese_path = "output/latest_digest.zh.md"
+
+[delivery.email]
+enabled = false
+smtp_host_env = "SMTP_HOST"
+smtp_port_env = "SMTP_PORT"
+username_env = "SMTP_USERNAME"
+password_env = "SMTP_PASSWORD"
+from_env = "SMTP_FROM"
+to_env = "SMTP_TO"
+to = ["your-email@example.com"]
+chinese_enabled = true
+use_starttls = true
+
+[delivery.webhook]
+enabled = false
+url_env = "DIGEST_WEBHOOK_URL"
