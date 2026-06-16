@@ -56,6 +56,7 @@ output\latest_digest.zh.md    # 最新中文摘要
 - Semantic Scholar
 - PubMed
 - Google News RSS
+- Google 官方 Custom Search JSON API
 - Conference Alerts
 - WikiCFP
 - 手动监控的会议或程序页面
@@ -340,6 +341,37 @@ url = "https://example.com/rss"
 kind = "paper"
 max_results = 8
 ```
+
+## 添加 Google 官方搜索
+
+项目支持 Google 官方 Custom Search JSON API。它不是直接爬 Google 搜索页面，而是使用官方 JSON API。
+
+需要两个本机用户环境变量：
+
+```powershell
+[Environment]::SetEnvironmentVariable("GOOGLE_SEARCH_API_KEY", "你的 Google API key", "User")
+[Environment]::SetEnvironmentVariable("GOOGLE_SEARCH_CX", "你的 Programmable Search Engine ID", "User")
+```
+
+配置位置：
+
+```toml
+[sources.google_search]
+enabled = true
+api_key_env = "GOOGLE_SEARCH_API_KEY"
+cx_env = "GOOGLE_SEARCH_CX"
+max_results = 20
+results_per_query = 5
+kind = "feed"
+queries = [
+  "\"MPGD\" Micromegas detector",
+  "\"Resistive Plate Chamber\" detector",
+  "\"gaseous detector\" \"JINST\"",
+  "\"Micromegas\" \"Nuclear Instruments and Methods\""
+]
+```
+
+如果运行时报 `This project does not have the access to Custom Search JSON API`，需要在 Google Cloud Console 中启用 `Custom Search API`，并确认 API key 没有限制错 API。
 
 ## 常用命令速查
 

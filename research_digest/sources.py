@@ -31,6 +31,7 @@ def fetch_all(config: dict[str, Any], since: datetime) -> tuple[list[DigestItem]
         ("semantic_scholar", fetch_semantic_scholar),
         ("pubmed", fetch_pubmed),
         ("google_news", fetch_google_news),
+        ("google_search", fetch_google_search),
         ("conference_alerts", fetch_conference_alerts),
         ("wikicfp", fetch_wikicfp),
         ("watched_pages", fetch_watched_pages),
@@ -251,6 +252,58 @@ def fetch_google_news(client: HTTPClient, keywords: list[str], settings: dict[st
         )
         items.extend(_parse_rss(client.get_text(url), source="Google News", default_kind="news", since=since))
     return items[: int(settings.get("max_results", 10))]
+
+
+def fetch_google_search(client: HTTPClient, keywords: list[str], settings: dict[str, Any], since: datetime) -> list[DigestItem]:
+    api_key = _env_value(settings.get("api_key_env"))
+    cx = _env_value(settings.get("cx_env"))
+    if not api_key or not cx:
+        raise RuntimeError("missing Google Custom Search API key or cx")
+
+    queries = [str(query) for query in settings.get("queries", []) if str(query).strip()]
+    if not queries:
+        queries = [" ".join(keywords)]
+
+    per_query = min(10, max(1, int(settings.get("results_per_query", 5))))
+    max_results = int(settings.get("max_results", 20))
+    days = max(1, (datetime.now(UTC) - since).days)
+    date_restrict = str(settings.get("date_restrict", f"d{days}"))
+    items: list[DigestItem] = []
+
+    for query in queries:
+        url = client.build_url(
+            "https://www.googleapis.com/customsearch/v1",
+            {
+                "key": api_key,
+                "cx": cx,
+                "q": query,
+                "num": per_query,
+                "dateRestrict": date_restrict,
+            },
+        )
+        payload = client.get_json(url)
+        for result in payload.get("items", []):
+            link = str(result.get("link", ""))
+            title = clean_text(result.get("title", ""))
+            snippet = clean_text(result.get("snippet", ""))
+            published = _google_search_date(result)
+            if published and published < since:
+                continue
+            items.append(
+                DigestItem(
+                    source="Google Search",
+                    kind=str(settings.get("kind", "feed")),
+                    title=title,
+                    url=link,
+                    published=published,
+                    venue=clean_text(result.get("displayLink", "")),
+                    summary=snippet,
+                    metadata={"query": query},
+                )
+            )
+            if len(items) >= max_results:
+                return items
+    return items
 
 
 def fetch_conference_alerts(client: HTTPClient, keywords: list[str], settings: dict[str, Any], since: datetime) -> list[DigestItem]:
@@ -484,6 +537,24 @@ def _pubmed_date(article: ET.Element) -> datetime | None:
     if not year:
         return None
     return parse_datetime(f"{year}-{month}-{day}")
+
+
+def _google_search_date(result: dict[str, Any]) -> datetime | None:
+    pagemap = result.get("pagemap") or {}
+    for metatag in pagemap.get("metatags", []):
+        for key in (
+            "article:published_time",
+            "article:modified_time",
+            "citation_publication_date",
+            "dc.date",
+            "dc.date.issued",
+            "date",
+            "og:updated_time",
+        ):
+            parsed = parse_datetime(metatag.get(key))
+            if parsed:
+                return parsed
+    return None
 
 
 def _conference_date(month_name: str, year: int, day: int | None) -> datetime | None:

@@ -40,6 +40,24 @@ language = "en-US"
 country = "US"
 max_results = 8
 
+[sources.google_search]
+enabled = false
+api_key_env = "GOOGLE_SEARCH_API_KEY"
+cx_env = "GOOGLE_SEARCH_CX"
+max_results = 20
+results_per_query = 5
+kind = "feed"
+queries = [
+  "\"MPGD\" Micromegas detector",
+  "\"Resistive Plate Chamber\" detector",
+  "\"gaseous detector\" \"JINST\"",
+  "\"Micromegas\" \"Nuclear Instruments and Methods\"",
+  "\"MPGD\" site:iopscience.iop.org",
+  "\"Resistive Plate Chamber\" site:sciencedirect.com",
+  "\"Micromegas\" site:indico.cern.ch",
+  "\"MPGD\" site:indico.cern.ch"
+]
+
 [sources.conference_alerts]
 enabled = true
 when_days = 365

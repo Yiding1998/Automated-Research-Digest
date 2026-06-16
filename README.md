@@ -9,6 +9,7 @@ It currently supports:
 - Semantic Scholar
 - PubMed
 - Google News RSS
+- Google Custom Search JSON API
 - Conference Alerts
 - WikiCFP, optional and best-effort
 - Manually watched conference/program pages
@@ -124,6 +125,30 @@ url = "https://example.com/rss"
 kind = "paper"
 max_results = 8
 ```
+
+## Google Custom Search
+
+The project can use the official Google Custom Search JSON API. It does not scrape Google result pages.
+
+Set:
+
+```powershell
+[Environment]::SetEnvironmentVariable("GOOGLE_SEARCH_API_KEY", "...", "User")
+[Environment]::SetEnvironmentVariable("GOOGLE_SEARCH_CX", "...", "User")
+```
+
+Then enable:
+
+```toml
+[sources.google_search]
+enabled = true
+api_key_env = "GOOGLE_SEARCH_API_KEY"
+cx_env = "GOOGLE_SEARCH_CX"
+max_results = 20
+results_per_query = 5
+```
+
+If Google returns `This project does not have the access to Custom Search JSON API`, enable `Custom Search API` in Google Cloud Console and check the API key restrictions.
 
 ## Watched Conference Pages
 
